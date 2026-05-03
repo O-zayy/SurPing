@@ -1,0 +1,50 @@
+.lyrics-page {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 34%),
+    #121212;
+}
+
+.lyrics-album-art {
+  width: min(430px, 82vw);
+  aspect-ratio: 1 / 1;
+}
+
+.lyrics-search input {
+  text-overflow: ellipsis;
+}
+
+.lyrics-scroll-panel {
+  overscroll-behavior: contain;
+}
+
+@media (min-width: 768px) {
+  .lyrics-album-art {
+    width: min(430px, 100%, calc(100vh - 360px));
+  }
+}
+
+@media (max-width: 767px) {
+  .lyrics-page {
+    overflow-y: auto;
+  }
+
+  .lyrics-player-layout {
+    min-height: 100svh;
+  }
+
+  .lyrics-scroll-panel {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+@media (max-width: 420px) {
+  .lyrics-search {
+    top: 88px;
+  }
+
+  .lyrics-album-art {
+    width: min(320px, 76vw);
+    border-radius: 22px;
+  }
+}

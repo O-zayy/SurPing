@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function QrCode() {
@@ -10,14 +10,20 @@ export default function QrCode() {
   const [isGenerating, setIsGenerating] = useState(false);
 
   useEffect(() => {
-    if (word) {
+    if (!word) return undefined;
+
+    const startTimer = window.setTimeout(() => {
       setIsGenerating(true);
-      // Simulate a small delay for the scanner animation to play
-      setTimeout(() => {
-        setQrCode(`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(word)}&size=${size}x${size}&bgcolor=${bgColor}`);
-        setIsGenerating(false);
-      }, 1500);
-    }
+    }, 0);
+    const generateTimer = window.setTimeout(() => {
+      setQrCode(`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(word)}&size=${size}x${size}&bgcolor=${bgColor}`);
+      setIsGenerating(false);
+    }, 1500);
+
+    return () => {
+      window.clearTimeout(startTimer);
+      window.clearTimeout(generateTimer);
+    };
   }, [word, size, bgColor]);
 
   function handleClick() {
@@ -44,7 +50,7 @@ export default function QrCode() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[#21346e] overflow-hidden font-body text-white">
+    <div className="relative min-h-screen w-full bg-[#21346e] overflow-x-hidden font-body text-white">
       {/* Background Video */}
       <video
         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260206_044704_dd33cb15-c23f-4cfc-aa09-a0465d4dcb54.mp4"
@@ -55,19 +61,20 @@ export default function QrCode() {
         playsInline
       />
       
-      <div className="absolute inset-0 bg-black/20 z-0 mix-blend-overlay pointer-events-none"></div>
+      <div className="absolute inset-0 bg-black/45 z-0 mix-blend-overlay pointer-events-none"></div>
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/70 z-0 pointer-events-none"></div>
 
       {/* Top-Aligned Layout Container */}
-      <div className="relative z-10 w-full min-h-screen flex flex-col justify-start px-6 md:px-12 lg:px-16 pt-32 md:pt-48 pb-24">
+      <div className="relative z-10 w-full min-h-screen flex flex-col justify-start px-4 sm:px-6 md:px-12 lg:px-16 pt-28 sm:pt-32 md:pt-48 pb-16 md:pb-24">
         <div className="lg:grid lg:grid-cols-2 lg:items-start gap-12 max-w-[88rem] mx-auto w-full">
           
           {/* Left Column: Typography */}
-          <div className="mb-16 lg:mb-0 drop-shadow-2xl flex flex-col items-start">
+          <div className="mb-12 md:mb-16 lg:mb-0 drop-shadow-2xl flex flex-col items-start">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="font-rubik font-bold text-6xl md:text-8xl lg:text-[100px] text-white uppercase leading-[0.98] tracking-[-0.03em] mb-12"
+              className="font-rubik font-bold text-4xl sm:text-6xl md:text-8xl lg:text-[100px] text-white uppercase leading-[0.98] mb-8 md:mb-12"
             >
               NEW ERA<br/>
               OF DESIGN<br/>
@@ -78,14 +85,14 @@ export default function QrCode() {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative flex items-center justify-center w-[184px] h-[65px] transition-transform duration-300 hover:scale-105 active:scale-95 group"
+              className="relative flex items-center justify-center w-[168px] sm:w-[184px] h-[58px] sm:h-[65px] transition-transform duration-300 hover:scale-105 active:scale-95 group"
               onClick={() => document.getElementById('qr-generator')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <svg className="absolute inset-0 w-full h-full text-white" viewBox="0 0 184 65" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 {/* A custom path for a unique CTA button shape */}
                 <path d="M12 0H172C178.627 0 184 5.37258 184 12V53C184 59.6274 178.627 65 172 65H12C5.37258 65 0 59.6274 0 53V12C0 5.37258 5.37258 0 12 0Z" />
               </svg>
-              <span className="relative z-10 font-rubik font-bold uppercase text-[20px] text-[#161a20] tracking-wider">GET STARTED</span>
+              <span className="relative z-10 font-rubik font-bold uppercase text-[18px] sm:text-[20px] text-[#161a20]">GET STARTED</span>
             </motion.button>
           </div>
 
@@ -95,7 +102,7 @@ export default function QrCode() {
               variants={containerVariants}
               initial="hidden"
               animate="show"
-              className="liquid-glass border border-white/20 p-8 rounded-2xl w-full max-w-md shadow-2xl backdrop-blur-xl bg-black/40 flex flex-col gap-6"
+              className="liquid-glass border border-white/20 p-5 sm:p-8 rounded-2xl w-full max-w-md shadow-2xl backdrop-blur-xl bg-black/50 flex flex-col gap-6"
             >
               
               <motion.div variants={itemVariants} className="flex flex-col gap-2">
@@ -108,7 +115,7 @@ export default function QrCode() {
                 />
               </motion.div>
 
-              <motion.div variants={itemVariants} className="flex gap-4">
+              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
                 <div className="flex flex-col gap-2 flex-1">
                   <label className="text-gray-300 text-xs font-semibold uppercase tracking-widest">Size (px)</label>
                   <input
@@ -189,7 +196,7 @@ export default function QrCode() {
                       <img 
                         src={qrCode} 
                         alt="Generated QR" 
-                        className="rounded-lg shadow-[0_0_30px_rgba(255,255,255,0.1)] mix-blend-screen bg-white p-2"
+                        className="rounded-lg shadow-[0_0_30px_rgba(255,255,255,0.1)] mix-blend-screen bg-white p-2 w-full max-w-[260px] sm:max-w-none"
                       />
                     </motion.div>
                   ) : (

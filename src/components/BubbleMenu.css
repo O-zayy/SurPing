@@ -1,0 +1,368 @@
+.bubble-menu {
+  left: 0;
+  right: 0;
+  top: 1.5em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 2em;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.bubble-menu::before {
+  content: '';
+  position: absolute;
+  inset: -22px 1.2em -18px;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 4rem 50%, rgba(255, 255, 255, 0.25), transparent 60px),
+    radial-gradient(circle at calc(50% + 5rem) 50%, rgba(111, 255, 0, 0.15), transparent 150px),
+    radial-gradient(circle at calc(100% - 4rem) 50%, rgba(180, 200, 255, 0.15), transparent 60px);
+  filter: blur(20px);
+  opacity: 0.95;
+}
+
+.bubble-menu.fixed {
+  position: fixed;
+}
+
+.bubble-menu.absolute {
+  position: absolute;
+}
+
+/* Bubble base — glass morphism */
+.bubble-menu .bubble {
+  --bubble-size: 48px;
+  width: var(--bubble-size);
+  height: var(--bubble-size);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.01);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Inner glass shimmer */
+.bubble-menu .bubble::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.35) 0%,
+    rgba(255, 255, 255, 0.1) 20%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.1) 80%,
+    rgba(255, 255, 255, 0.35) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.bubble-menu .logo-bubble,
+.bubble-menu .toggle-bubble {
+  will-change: transform;
+}
+
+.bubble-menu .logo-bubble {
+  width: var(--bubble-size);
+  min-height: var(--bubble-size);
+  height: var(--bubble-size);
+  padding: 0;
+  border-radius: 50%;
+}
+
+.bubble-menu .toggle-bubble {
+  width: var(--bubble-size);
+  height: var(--bubble-size);
+}
+
+.bubble-menu .bubble-logo {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 50%;
+  object-fit: contain;
+  display: block;
+}
+
+.bubble-menu .logo-content {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.bubble-menu .bubble-logo-letter {
+  font-family: var(--font-heading, 'Instrument Serif', serif);
+  font-size: 2.15rem;
+  font-style: italic;
+  line-height: 1;
+  color: #fff;
+  transform: translateY(-2px);
+  text-shadow: 0 0 18px rgba(111, 255, 0, 0.28);
+}
+
+.bubble-menu .logo-content > .bubble-logo,
+.bubble-menu .logo-content > img,
+.bubble-menu .logo-content > svg {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+/* Hamburger button */
+.bubble-menu .menu-btn {
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+}
+
+.bubble-menu .menu-line {
+  width: 22px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 2px;
+  display: block;
+  margin: 0 auto;
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+  transform-origin: center;
+  position: relative;
+  z-index: 2;
+}
+
+.bubble-menu .menu-line + .menu-line {
+  margin-top: 6px;
+}
+
+.bubble-menu .menu-line.short {
+  width: 16px;
+}
+
+.bubble-menu .menu-btn.open .menu-line:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.bubble-menu .menu-btn.open .menu-line:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+  width: 22px;
+}
+
+@media (min-width: 768px) {
+  .bubble-menu .bubble {
+    --bubble-size: 52px;
+  }
+}
+
+/* Full-screen overlay */
+.bubble-menu-items {
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 98;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.bubble-menu-items::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.14), transparent 28%),
+    radial-gradient(circle at 80% 72%, rgba(111, 255, 0, 0.11), transparent 34%);
+}
+
+.bubble-menu-items.fixed {
+  position: fixed;
+}
+
+.bubble-menu-items.absolute {
+  position: absolute;
+}
+
+/* Pill list layout */
+.bubble-menu-items .pill-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  row-gap: 6px;
+  width: 100%;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  pointer-events: auto;
+  justify-content: stretch;
+}
+
+.bubble-menu-items .pill-list .pill-col {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex: 0 0 calc(100% / 3);
+  box-sizing: border-box;
+}
+
+/* Center the last 2 items when there are 5 total */
+.bubble-menu-items .pill-list .pill-col:nth-child(4):nth-last-child(2) {
+  margin-left: calc(100% / 6);
+}
+
+.bubble-menu-items .pill-list .pill-col:nth-child(4):last-child {
+  margin-left: calc(100% / 3);
+}
+
+/* Pill link — glass morphism */
+.bubble-menu-items .pill-link {
+  --pill-bg: rgba(255, 255, 255, 0.04);
+  --pill-color: rgba(255, 255, 255, 0.9);
+  --pill-border: rgba(255, 255, 255, 0.1);
+  --item-rot: 0deg;
+  --pill-min-h: 140px;
+  --hover-bg: #3b82f6;
+  --hover-color: #ffffff;
+  width: 100%;
+  min-height: var(--pill-min-h);
+  padding: clamp(1.5rem, 3vw, 6rem) 0;
+  font-size: clamp(1.5rem, 3.5vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1;
+  border-radius: 999px;
+  background: var(--pill-bg);
+  color: var(--pill-color);
+  text-decoration: none;
+  border: 1px solid var(--pill-border);
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+  will-change: transform;
+  transform: rotate(var(--item-rot));
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  letter-spacing: 0.02em;
+}
+
+/* Inner glow border on pills */
+.bubble-menu-items .pill-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0) 60%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+  .bubble-menu-items .pill-link:hover {
+    transform: rotate(var(--item-rot)) scale(1.06);
+    background: var(--hover-bg);
+    color: var(--hover-color);
+    border-color: transparent;
+    box-shadow: 0 8px 40px color-mix(in srgb, var(--hover-bg) 40%, transparent);
+  }
+
+  .bubble-menu-items .pill-link:active {
+    transform: rotate(var(--item-rot)) scale(0.94);
+  }
+
+.bubble-menu-items .pill-link .pill-label {
+  display: inline-block;
+  will-change: transform, opacity;
+  height: 1.2em;
+  line-height: 1.2;
+  position: relative;
+  z-index: 2;
+}
+
+/* Mobile overlay logic */
+
+/* Mobile */
+@media (max-width: 899px) {
+  .bubble-menu-items {
+    align-items: flex-start;
+    padding-top: 100px;
+  }
+
+  .bubble-menu-items .pill-list {
+    row-gap: 12px;
+  }
+
+  .bubble-menu-items .pill-list .pill-col {
+    flex: 0 0 100%;
+    margin-left: 0 !important;
+    overflow: visible;
+  }
+
+  .bubble-menu-items .pill-link {
+    font-size: clamp(1.2rem, 3vw, 3rem);
+    padding: clamp(1rem, 2vw, 2rem) 0;
+    min-height: 70px;
+  }
+
+  .bubble-menu-items .pill-link:hover {
+    transform: rotate(var(--item-rot)) scale(1.04);
+    background: var(--hover-bg);
+    color: var(--hover-color);
+    border-color: transparent;
+  }
+
+  .bubble-menu-items .pill-link:active {
+    transform: rotate(var(--item-rot)) scale(0.94);
+  }
+}

@@ -1,36 +1,155 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import BubbleMenu from './components/BubbleMenu';
 import LandingPage from './pages/LandingPage';
 import QrCode from './pages/QrCode';
 import PingPong from './pages/PingPong';
 import Lyrics from './pages/Lyrics';
 import IpLocator from './pages/IpLocator';
+import appLogo from './assets/Logo.png';
 
-// Note: Navbar is here to be shared across all pages. 
-const Navbar = () => (
-  <nav className="fixed top-4 left-0 right-0 px-8 lg:px-16 z-50 flex justify-between items-center pointer-events-none font-body">
-    <div className="pointer-events-auto w-12 h-12 liquid-glass rounded-full flex items-center justify-center font-heading italic text-3xl text-white">a</div>
-    <div className="pointer-events-auto hidden lg:flex liquid-glass rounded-full px-1.5 py-1.5 items-center bg-black/20">
-      <Link to="/" className="px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors">Home</Link>
-      <Link to="/qr-code" className="px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors">QR Code</Link>
-      <Link to="/ping-pong" className="px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors">Ping Pong</Link>
-      <Link to="/lyrics" className="px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors">Lyrics</Link>
-      <Link to="/ip-locator" className="px-3 py-2 text-sm font-medium text-white/90 hover:text-white transition-colors">IP Locator</Link>
-      <Link to="/qr-code" className="ml-2 bg-white text-black hover:bg-gray-200 transition-colors px-4 py-2 rounded-full text-sm font-medium flex items-center whitespace-nowrap">
-        Claim a Spot
-        <svg className="ml-1 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M7 7h10v10" />
-        </svg>
-      </Link>
-    </div>
-    <div className="w-12 h-12 invisible"></div>
-  </nav>
-);
+const menuItems = [
+  {
+    label: 'Home',
+    href: '/',
+    rotation: -6,
+    hoverStyles: { bgColor: '#6fff00', textColor: '#010828' },
+  },
+  {
+    label: 'QR Code',
+    href: '/qr-code',
+    rotation: 4,
+    hoverStyles: { bgColor: '#eff4ff', textColor: '#010828' },
+  },
+  {
+    label: 'Ping Pong',
+    href: '/ping-pong',
+    rotation: -3,
+    hoverStyles: { bgColor: '#ff9f1c', textColor: '#010828' },
+  },
+  {
+    label: 'Lyrics',
+    href: '/lyrics',
+    rotation: 5,
+    hoverStyles: { bgColor: '#bde0fe', textColor: '#010828' },
+  },
+  {
+    label: 'IP Locator',
+    href: '/ip-locator',
+    rotation: -4,
+    hoverStyles: { bgColor: '#ff4d6d', textColor: '#ffffff' },
+  },
+];
+
+const transitionWords = ['Hello', 'Bonjour', 'Namaste', 'Ciao', 'Hola', 'SurPing'];
+
+const handleGlow = (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
+  e.currentTarget.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
+};
+
+function DesktopNavbar({ logo, items, onNavigateStart }) {
+  const navigate = useNavigate();
+
+  const handleNavigation = (e, href) => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
+      return;
+    }
+
+    e.preventDefault();
+    const animationDelay = onNavigateStart?.(href) ?? 900;
+
+    window.setTimeout(() => {
+      navigate(href);
+    }, animationDelay);
+  };
+
+  return null;
+}
+
+const getTargetWord = (href) => {
+  switch (href) {
+    case '/': return 'SurPing';
+    case '/qr-code': return 'QR Code';
+    case '/ping-pong': return 'Ping Pong';
+    case '/lyrics': return 'Lyrics';
+    case '/ip-locator': return 'IP Locator';
+    default: return 'SurPing';
+  }
+};
 
 function App() {
+  const [showSiteLoader, setShowSiteLoader] = useState(false);
+  const [targetLoaderWord, setTargetLoaderWord] = useState('SurPing');
+  const [loaderWordIndex, setLoaderWordIndex] = useState(transitionWords.length - 1);
+  const loaderTimeoutRef = useRef(null);
+  const loaderIntervalRef = useRef(null);
+
+  useEffect(() => {
+    document.title = 'SurPing';
+
+    return () => {
+      if (loaderTimeoutRef.current) {
+        window.clearTimeout(loaderTimeoutRef.current);
+      }
+      if (loaderIntervalRef.current) {
+        window.clearInterval(loaderIntervalRef.current);
+      }
+    };
+  }, []);
+
+  const startPageTransition = (href = '/') => {
+    if (loaderTimeoutRef.current) {
+      window.clearTimeout(loaderTimeoutRef.current);
+    }
+    if (loaderIntervalRef.current) {
+      window.clearInterval(loaderIntervalRef.current);
+    }
+
+    setTargetLoaderWord(getTargetWord(href));
+    setLoaderWordIndex(0);
+    setShowSiteLoader(true);
+
+    let nextIndex = 0;
+    loaderIntervalRef.current = window.setInterval(() => {
+      nextIndex += 1;
+      setLoaderWordIndex(Math.min(nextIndex, transitionWords.length));
+
+      if (nextIndex >= transitionWords.length && loaderIntervalRef.current) {
+        window.clearInterval(loaderIntervalRef.current);
+        loaderIntervalRef.current = null;
+      }
+    }, 160); // Slowed down from 135
+
+    loaderTimeoutRef.current = window.setTimeout(() => {
+      setShowSiteLoader(false);
+    }, 1600); // Increased from 1280 to show QR Code / SurPing for longer
+
+    return 920;
+  };
+
+  const currentWords = [...transitionWords];
+  currentWords[currentWords.length - 1] = targetLoaderWord;
+
   return (
     <Router>
-      <Navbar />
+      <DesktopNavbar logo={appLogo} items={menuItems} onNavigateStart={startPageTransition} />
+      <BubbleMenu
+        className="mobile-bubble-menu"
+        logo={appLogo}
+        items={menuItems}
+        onLogoClick={() => startPageTransition('/')}
+        onNavigateStart={startPageTransition}
+      />
+      <div className={`site-loader ${showSiteLoader ? 'visible' : ''}`} aria-hidden={!showSiteLoader}>
+        <div className="site-loader-card">
+          <span key={currentWords[Math.min(loaderWordIndex, currentWords.length - 1)]} className="site-loader-title">
+            {currentWords[Math.min(loaderWordIndex, currentWords.length - 1)]}
+          </span>
+          <span className="site-loader-line" />
+        </div>
+      </div>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/qr-code" element={<QrCode />} />
