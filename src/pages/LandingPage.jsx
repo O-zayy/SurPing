@@ -2,6 +2,8 @@ import { useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import ProfileCard from '../components/ProfileCard';
+import Folder from '../components/Folder';
+import Stack from '../components/Stack';
 import { gsap } from 'gsap';
 import ojaswaImg from '/src/assets/OJASWA CHAUHAN.png';
 import adityaImg from '/src/assets/ADITYA SRIVASTAVA.png';
@@ -141,6 +143,42 @@ export default function LandingPage() {
   }, []);
 
   const cardsRef = useRef(null);
+
+  const teamMembers = [
+    {
+      name: 'Ojaswa Chauahan',
+      title: 'Team Leader',
+      handle: 'ojaswa',
+      status: 'Leading the Vision',
+      avatarUrl: ojaswaImg,
+      linkedin: 'https://www.linkedin.com/in/ojaswa-chauhan-812261381/',
+      behindGlowColor: 'rgba(111, 255, 0, 0.34)',
+      innerGradient: 'linear-gradient(145deg, #1f4a1f8c 0%, #6fff0044 100%)',
+      folderColor: '#53D64A'
+    },
+    {
+      name: 'Aditya Srivastava',
+      title: 'Developer',
+      handle: 'aditya',
+      status: 'Building Features',
+      avatarUrl: adityaImg,
+      linkedin: 'https://www.linkedin.com/in/aditya-srivastava-41753a35a/',
+      behindGlowColor: 'rgba(125, 190, 255, 0.46)',
+      innerGradient: 'linear-gradient(145deg, #1f3a5f8c 0%, #7dbeff44 100%)',
+      folderColor: '#3E86FF'
+    },
+    {
+      name: 'Shubham Makkar',
+      title: 'Developer',
+      handle: 'shubham',
+      status: 'Crafting Code',
+      avatarUrl: shubhamImg,
+      linkedin: 'https://www.linkedin.com/in/shubham-makkar06/',
+      behindGlowColor: 'rgba(255, 255, 255, 0.32)',
+      innerGradient: 'linear-gradient(145deg, #3a3a3a8c 0%, #ffffff44 100%)',
+      folderColor: '#C8CBD3'
+    }
+  ];
 
   useEffect(() => {
     gsap.fromTo(
@@ -356,55 +394,115 @@ export default function LandingPage() {
         <h2 className="crew-title font-heading italic text-white text-5xl sm:text-6xl md:text-7xl lg:text-[6rem] leading-[0.9] mb-16">
           Meet the Crew
         </h2>
-        <div ref={cardsRef} className="crew-grid grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-[112rem]">
-          <ProfileCard
-            className="profile-card crew-profile-card"
-            name="Ojaswa Chauahan"
-            title="Team Leader"
-            handle="ojaswa"
-            status="Leading the Vision"
-            avatarUrl={ojaswaImg}
-            contactText="Connect"
-            onContactClick={() => window.open('https://www.linkedin.com/in/ojaswa-chauhan-812261381/', '_blank')}
-            behindGlowEnabled={true}
-            behindGlowColor="rgba(111, 255, 0, 0.34)"
-            innerGradient="linear-gradient(145deg, #1f4a1f8c 0%, #6fff0044 100%)"
-            showUserInfo={true}
-            enableTilt={true}
-            enableMobileTilt={true}
+        <div ref={cardsRef} className="crew-grid hidden lg:grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-[112rem]">
+          {teamMembers.map(member => (
+            <ProfileCard
+              key={member.handle}
+              className="profile-card crew-profile-card"
+              name={member.name}
+              title={member.title}
+              handle={member.handle}
+              status={member.status}
+              avatarUrl={member.avatarUrl}
+              contactText="Connect"
+              onContactClick={() => window.open(member.linkedin, '_blank')}
+              behindGlowEnabled={true}
+              behindGlowColor={member.behindGlowColor}
+              innerGradient={member.innerGradient}
+              showUserInfo={true}
+              enableTilt={true}
+              enableMobileTilt={true}
+            />
+          ))}
+        </div>
+
+        <div className="crew-folder-grid hidden sm:flex lg:hidden flex-col items-center gap-8 w-full max-w-4xl">
+          <div className="folder-single-wrap">
+            <Folder
+              size={2}
+              color="#4C8AF6"
+              className="folder-item"
+              items={teamMembers.slice(0, 3).map(member => (
+                <div key={`${member.handle}-paper`} className="folder-paper-content">
+                  <img src={member.avatarUrl} alt={member.name} className="folder-paper-avatar" loading="lazy" />
+                  <span className="folder-paper-name">{member.handle}</span>
+                </div>
+              ))}
+            />
+          </div>
+        </div>
+
+        <div className="crew-stack-wrap sm:hidden w-full max-w-[19rem] h-[22rem] mt-2">
+          <Stack
+            randomRotation
+            sensitivity={120}
+            sendToBackOnClick={false}
+            autoplay={false}
+            autoplayDelay={3000}
+            pauseOnHover
+            cards={[...teamMembers.slice(1), teamMembers[0]].map(member => (
+              <a
+                key={`${member.handle}-stack`}
+                href={member.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="stack-card group"
+              >
+                <img src={member.avatarUrl} alt={member.name} className="stack-card-img" loading="lazy" />
+                <div className="stack-card-overlay">
+                  <p className="stack-card-name">{member.name}</p>
+                  <p className="stack-card-title">{member.title}</p>
+                </div>
+              </a>
+            ))}
           />
-          <ProfileCard
-            className="profile-card crew-profile-card"
-            name="Aditya Srivastava"
-            title="Developer"
-            handle="aditya"
-            status="Building Features"
-            avatarUrl={adityaImg}
-            contactText="Connect"
-            onContactClick={() => window.open('https://www.linkedin.com/in/aditya-srivastava-41753a35a/', '_blank')}
-            behindGlowEnabled={true}
-            behindGlowColor="rgba(125, 190, 255, 0.46)"
-            innerGradient="linear-gradient(145deg, #1f3a5f8c 0%, #7dbeff44 100%)"
-            showUserInfo={true}
-            enableTilt={true}
-            enableMobileTilt={true}
-          />
-          <ProfileCard
-            className="profile-card crew-profile-card"
-            name="Shubham Makkar"
-            title="Developer"
-            handle="shubham"
-            status="Crafting Code"
-            avatarUrl={shubhamImg}
-            contactText="Connect"
-            onContactClick={() => window.open('https://www.linkedin.com/in/shubham-makkar06/', '_blank')}
-            behindGlowEnabled={true}
-            behindGlowColor="rgba(255, 255, 255, 0.32)"
-            innerGradient="linear-gradient(145deg, #3a3a3a8c 0%, #ffffff44 100%)"
-            showUserInfo={true}
-            enableTilt={true}
-            enableMobileTilt={true}
-          />
+        </div>
+      </section>
+
+      {/* About Me Section / Footer */}
+      <section className="about-section relative w-full flex flex-col items-center justify-center px-5 sm:px-8 py-24 border-t border-white/5 bg-black/40 backdrop-blur-md">
+        <div className="max-w-4xl text-center flex flex-col items-center relative z-10">
+          <h2 className="font-heading italic text-white text-3xl sm:text-4xl md:text-5xl mb-4 text-shadow-sm">
+            Crafted by <span style={{ backgroundImage: 'linear-gradient(to right, #6fff00, #bde0fe)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', color: 'transparent' }}>O-zayy</span>
+          </h2>
+          
+          <p className="text-white/60 text-sm md:text-base max-w-2xl mx-auto mb-10 leading-relaxed">
+            I build premium web experiences focused on smooth animations, cinematic design, and high-performance interfaces. Check out my other work below.
+          </p>
+
+          <div className="flex flex-col sm:flex-row flex-wrap gap-5 items-center justify-center">
+            <a 
+              href="https://github.com/O-zayy" 
+              target="_blank" 
+              rel="noreferrer"
+              className="cursor-glow cursor-glow-wide flex items-center justify-center p-4 bg-white/5 border border-white/10 rounded-full text-white transition-all active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:bg-white/10 hover:border-white/20"
+            >
+              <div className="w-16 h-16 overflow-hidden rounded-full bg-white/90 flex items-center justify-center">
+                <iframe
+                  src="https://lottie.host/embed/47318879-c37f-4617-a017-24e6d311483e/YzPWSZy405.lottie"
+                  title="GitHub animation"
+                  className="w-full h-full border-0 pointer-events-none"
+                  loading="lazy"
+                />
+              </div>
+            </a>
+
+            <a 
+              href="https://www.instagram.com/ojaswa_chauhan770?igsh=b3Qyd2s0cWdnbzI5" 
+              target="_blank" 
+              rel="noreferrer"
+              className="cursor-glow cursor-glow-wide flex items-center justify-center p-4 bg-transparent border border-[#e1306c]/30 rounded-full text-[#e1306c] transition-all active:scale-95 shadow-[0_0_20px_rgba(225,48,108,0.1)] hover:bg-[#e1306c]/10 hover:border-[#e1306c]/50"
+            >
+              <div className="w-16 h-16 flex items-center justify-center">
+                <iframe 
+                  src="https://lottie.host/embed/0374584a-4f49-4160-a24e-46fc6166fd02/F8OWUOt7U3.lottie" 
+                  title="Instagram animation"
+                  className="w-full h-full border-0 pointer-events-none"
+                  loading="lazy"
+                />
+              </div>
+            </a>
+          </div>
         </div>
       </section>
     </div>

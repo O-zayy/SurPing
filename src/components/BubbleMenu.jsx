@@ -198,9 +198,9 @@ export default function BubbleMenu({
 
   return (
     <>
-      <nav 
-        className={containerClassName} 
-        style={style} 
+      <nav
+        className={containerClassName}
+        style={style}
         aria-label="Main navigation"
       >
         <Link

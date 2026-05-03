@@ -83,6 +83,99 @@
   --pc-details-top: clamp(2.3rem, 5vh, 4.5rem);
 }
 
+.crew-folder-grid {
+  align-items: start;
+}
+
+.folder-single-wrap {
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.folder-link-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+}
+
+.folder-item {
+  transform-origin: center center;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.35));
+}
+
+.folder-paper-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.folder-paper-avatar {
+  width: 70%;
+  height: 70%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.folder-paper-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: #111;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+.crew-stack-wrap {
+  margin-inline: auto;
+}
+
+.stack-card {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #0d0d0d;
+}
+
+.stack-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.stack-card-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 14px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.88), rgba(0, 0, 0, 0.2));
+}
+
+.stack-card-name {
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.stack-card-title {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
 @media (max-width: 900px) {
   .home-hero-content {
     min-height: auto;
@@ -112,6 +205,11 @@
     --pc-card-max-height: 680px;
     --pc-avatar-width: 154%;
     width: min(100%, 30rem);
+  }
+
+  .crew-folder-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.75rem 1rem;
   }
 }
 
@@ -176,5 +274,9 @@
     --pc-avatar-width: 146%;
     --pc-name-size: clamp(1.8rem, 10vw, 2.7rem);
     --pc-title-size: 0.95rem;
+  }
+
+  .crew-stack-wrap {
+    max-width: min(90vw, 20rem);
   }
 }

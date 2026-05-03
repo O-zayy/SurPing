@@ -349,10 +349,10 @@ const ProfileCardComponent = ({
     maskRepeat: 'repeat',
     maskSize: '150%',
     maskPosition: 'top calc(200% - (var(--background-y) * 5)) left calc(100% - var(--background-x))',
-    filter: 'brightness(0.66) contrast(1.33) saturate(0.33) opacity(0.5)',
+    filter: 'brightness(0.48) contrast(1.08) saturate(0.2) opacity(0.2)',
     animation: 'pc-holo-bg 18s linear infinite',
     animationPlayState: 'running',
-    mixBlendMode: 'color-dodge',
+    mixBlendMode: 'soft-light',
     '--space': '5%',
     '--angle': '-45deg',
     transform: 'translate3d(0, 0, 1px)',
@@ -374,12 +374,12 @@ const ProfileCardComponent = ({
       ),
       repeating-linear-gradient(
         var(--angle),
-        #0e152e 0%,
-        hsl(180, 10%, 60%) 3.8%,
-        hsl(180, 29%, 66%) 4.5%,
-        hsl(180, 10%, 60%) 5.2%,
-        #0e152e 10%,
-        #0e152e 12%
+        rgba(255,255,255,0) 0%,
+        hsla(180, 10%, 100%, 0.15) 3.8%,
+        hsla(180, 29%, 100%, 0.25) 4.5%,
+        hsla(180, 10%, 100%, 0.15) 5.2%,
+        rgba(255,255,255,0) 10%,
+        rgba(255,255,255,0) 12%
       ),
       radial-gradient(
         farthest-corner circle at var(--pointer-x) var(--pointer-y),
@@ -398,11 +398,11 @@ const ProfileCardComponent = ({
     overflow: 'hidden',
     backgroundImage: `radial-gradient(
       farthest-corner circle at var(--pointer-x) var(--pointer-y),
-      hsl(248, 25%, 80%) 12%,
-      hsla(207, 40%, 30%, 0.8) 90%
+      hsla(255, 100%, 100%, 0.4) 10%,
+      hsla(255, 100%, 100%, 0) 70%
     )`,
-    mixBlendMode: 'overlay',
-    filter: 'brightness(0.8) contrast(1.2)',
+    mixBlendMode: 'soft-light',
+    filter: 'brightness(0.82) contrast(0.95)',
     zIndex: 4,
     gridArea: '1 / -1',
     borderRadius: cardRadius,
@@ -433,12 +433,12 @@ const ProfileCardComponent = ({
             maxHeight: '540px',
             aspectRatio: '0.718',
             borderRadius: cardRadius,
-            backgroundBlendMode: 'color-dodge, normal, normal, normal',
+            backgroundBlendMode: 'normal, normal, normal, normal',
             boxShadow:
-              'rgba(0, 0, 0, 0.8) calc((var(--pointer-from-left) * 10px) - 3px) calc((var(--pointer-from-top) * 20px) - 6px) 20px -5px',
+              'rgba(0, 0, 0, 0.55) calc((var(--pointer-from-left) * 10px) - 3px) calc((var(--pointer-from-top) * 20px) - 6px) 20px -5px',
             transition: 'transform 1s ease',
             transform: 'translateZ(0) rotateX(0deg) rotateY(0deg)',
-            background: 'rgba(0, 0, 0, 0.9)'
+            background: 'rgba(8, 12, 20, 0.58)'
           }}
           onMouseEnter={e => {
             e.currentTarget.style.transition = 'none';
@@ -458,7 +458,7 @@ const ProfileCardComponent = ({
             className="absolute inset-0"
             style={{
               backgroundImage: 'var(--inner-gradient)',
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
+              backgroundColor: 'rgba(5, 8, 16, 0.54)',
               borderRadius: cardRadius,
               display: 'grid',
               gridArea: '1 / -1'
@@ -474,7 +474,6 @@ const ProfileCardComponent = ({
             <div
               className="overflow-visible backface-hidden"
               style={{
-                mixBlendMode: 'luminosity',
                 transform: 'translateZ(2px)',
                 gridArea: '1 / -1',
                 borderRadius: cardRadius,
@@ -482,15 +481,16 @@ const ProfileCardComponent = ({
               }}
             >
               <img
-                className="w-[135%] max-w-[135%] absolute left-1/2 bottom-[0px] backface-hidden will-change-transform transition-transform duration-[120ms] ease-out"
+                className="w-[180%] max-w-[180%] absolute left-1/2 bottom-[0px] backface-hidden will-change-transform transition-transform duration-[120ms] ease-out"
                 src={avatarUrl}
                 alt={`${name || 'User'} avatar`}
                 loading="lazy"
                 style={{
                   transformOrigin: '50% 100%',
                   transform:
-                    'translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 6px)) translateZ(0) scale(1.1) scaleY(calc(1 + (var(--pointer-from-top) - 0.5) * 0.02)) scaleX(calc(1 + (var(--pointer-from-left) - 0.5) * 0.01))',
-                  borderRadius: cardRadius
+                    'translateX(calc(-50% + (var(--pointer-from-left) - 0.5) * 6px)) translateZ(0) scale(1.35) scaleY(calc(1 + (var(--pointer-from-top) - 0.5) * 0.02)) scaleX(calc(1 + (var(--pointer-from-left) - 0.5) * 0.01))',
+                  borderRadius: cardRadius,
+                  filter: 'var(--pc-avatar-filter, saturate(1) contrast(1) brightness(1))'
                 }}
                 onError={e => {
                   const t = e.target;
@@ -553,7 +553,6 @@ const ProfileCardComponent = ({
               style={{
                 transform:
                   'translate3d(calc(var(--pointer-from-left) * -6px + 3px), calc(var(--pointer-from-top) * -6px + 3px), 0.1px)',
-                mixBlendMode: 'luminosity',
                 gridArea: '1 / -1',
                 borderRadius: cardRadius,
                 pointerEvents: 'none'
