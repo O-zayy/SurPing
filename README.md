@@ -1,66 +1,66 @@
 # SurPing
 
-**English:** Try it — a simple project named **SurPing**.  
-**Hinglish:** Try karo — **SurPing** ek simple project hai jisko aap easily run karke try kar sakte ho.
+**English:** Welcome to **SurPing**, a premium multi-tool web application blending sleek aesthetics with highly responsive utilities. Built to feel smooth on every screen, SurPing features cinematic motion, glassmorphism, and a mobile-first flow.  
+**Hinglish:** **SurPing** mein aapka swagat hai, ek premium multi-tool web app jismein sleek design aur highly responsive utilities hain. Yeh har screen par smooth feel dene ke liye banaya gaya hai, jismein cinematic animations aur glassmorphism ka use hua hai.
 
 ---
 
-## ✨ Features
+## ✨ Features / Khasiyat
 
 **English:**
-- Clean and simple UI
-- Fast, lightweight frontend
-- Easy to set up and run locally
+- **Lyrics Studio**: Full-screen music player with search, audio playback, and perfectly synced real-time lyrics.
+- **Ping Pong Arena**: A neon-styled interactive arcade game featuring physics, smooth paddle controls, and score tracking.
+- **Utility Layer**: Generate custom QR Codes and trace IP signals with high-contrast, fast, and responsive utility cards.
+- **Premium Aesthetics**: Built with `framer-motion` and `gsap` for fluid transitions, interactive 3D folders, stacked profile cards, and cinematic video backgrounds.
 
 **Hinglish:**
-- Clean aur simple UI
-- Fast aur lightweight frontend
-- Local machine par easily setup ho jata hai
+- **Lyrics Studio**: Full-screen music player jismein gaane search kar sakte ho, audio play kar sakte ho, aur real-time synced lyrics dekh sakte ho.
+- **Ping Pong Arena**: Ek neon-style interactive arcade game jismein physics aur smooth paddle controls hain.
+- **Utility Layer**: Custom QR Codes generate karo aur IP signals trace karo fast aur clear utility cards ke through.
+- **Premium Design**: `framer-motion` aur `gsap` ka use karke fluid animations, interactive 3D folders, aur cinematic video backgrounds banaye gaye hain.
 
 ---
 
 ## 🧰 Tech Stack
 
-**English:**
-- JavaScript (78.3%)
-- CSS (21.5%)
-- HTML (0.2%)
-
-**Hinglish:**
-- JavaScript (78.3%)
-- CSS (21.5%)
-- HTML (0.2%)
+**English & Hinglish:**
+- **Framework**: React 19 + Vite
+- **Styling**: Tailwind CSS v4, Vanilla CSS (Glassmorphism)
+- **Animation**: Framer Motion, GSAP, Lottie React
+- **Routing**: React Router DOM
+- **Other Utilities**: Axios, MathJS, JSZip
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started / Shuru Kaise Karein
 
-### Prerequisites
+### Prerequisites / Zaruratein
 
-**English:**
-- A modern browser (Chrome/Firefox/Edge)
-- (Optional) VS Code for editing
+- Node.js (v18 or higher)
+- A modern web browser
 
-**Hinglish:**
-- Modern browser (Chrome/Firefox/Edge)
-- (Optional) Editing ke liye VS Code
-
-### Installation
+### Installation / Setup
 
 **English:**
-1. Clone the repo:
+1. Clone the repository:
    ```bash
    git clone https://github.com/O-zayy/SurPing.git
    ```
-2. Go into the project folder:
+2. Navigate into the project folder:
    ```bash
    cd SurPing
    ```
-3. Open `index.html` in your browser  
-   (or use a local server if your project needs it).
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
 **Hinglish:**
-1. Repo clone karo:
+1. Repository ko clone karo:
    ```bash
    git clone https://github.com/O-zayy/SurPing.git
    ```
@@ -68,53 +68,29 @@
    ```bash
    cd SurPing
    ```
-3. `index.html` browser mein open kar do  
-   (ya phir local server use karo agar zarurat ho).
+3. Dependencies install karo:
+   ```bash
+   npm install
+   ```
+4. Development server start karo:
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## ▶️ Usage
+## 🗂️ Project Structure
 
-**English:**
-- Open the app in your browser
-- Try the available UI/actions
-- If there are inputs/buttons, interact and test the flow
-
-**Hinglish:**
-- App ko browser mein open karo
-- Jo UI/actions available hain unko try karo
-- Inputs/buttons hon to click karke flow test karo
-
----
-
-## 🖼️ Screenshots
-
-**English:** Add screenshots here.  
-**Hinglish:** Yahan screenshots add karo.
-
-Example:
-- `./screenshots/home.png`
-
----
-
-## 🗂️ Folder Structure
-
-**English:** (Update this based on your actual repo structure)
 ```text
 SurPing/
-├─ index.html
-├─ css/
-├─ js/
-└─ assets/
-```
-
-**Hinglish:** (Apne repo ke actual structure ke hisaab se update karo)
-```text
-SurPing/
-├─ index.html
-├─ css/
-├─ js/
-└─ assets/
+├── src/
+│   ├── assets/       # Images, animations, and media
+│   ├── components/   # Reusable UI components (Folder, Stack, ProfileCard, BubbleMenu)
+│   ├── pages/        # Main route pages (LandingPage, Lyrics, PingPong, QrCode)
+│   ├── App.jsx       # App routing setup
+│   └── index.css     # Global CSS variables and utilities
+├── package.json      # Dependencies and scripts
+└── vite.config.js    # Vite configuration
 ```
 
 ---
@@ -122,34 +98,14 @@ SurPing/
 ## 🤝 Contributing
 
 **English:**
-Contributions are welcome!
-1. Fork the repo
-2. Create a branch: `git checkout -b feature/my-feature`
-3. Commit: `git commit -m "Add my feature"`
-4. Push: `git push origin feature/my-feature`
-5. Open a Pull Request
+Contributions are highly appreciated! Feel free to open issues or submit pull requests to add new tools or refine the design.
 
 **Hinglish:**
-Contributions welcome hain!
-1. Repo fork karo
-2. Branch banao: `git checkout -b feature/my-feature`
-3. Commit karo: `git commit -m "Add my feature"`
-4. Push karo: `git push origin feature/my-feature`
-5. Pull Request open karo
-
----
-
-## 📄 License
-
-**English:** Add a license (e.g., MIT) and mention it here.  
-**Hinglish:** License add karo (jaise MIT) aur yahan mention karo.
+Aapke contributions welcome hain! Agar aap naye tools add karna chahte hain ya design refine karna chahte hain, toh issues open karein ya pull requests submit karein.
 
 ---
 
 ## 📬 Contact
 
-**English:**
-- GitHub: https://github.com/O-zayy
-
-**Hinglish:**
-- GitHub: https://github.com/O-zayy
+Crafted by **O-zayy**
+- GitHub: [O-zayy](https://github.com/O-zayy)
