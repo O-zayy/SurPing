@@ -179,6 +179,12 @@ export default function Lyrics() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Add body class for lyrics page (used to hide navbar logo on mobile)
+  useEffect(() => {
+    document.body.classList.add('page-lyrics');
+    return () => document.body.classList.remove('page-lyrics');
+  }, []);
+
   // Debounced Search for Autocomplete
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
@@ -209,6 +215,32 @@ export default function Lyrics() {
 
     return () => clearTimeout(delayDebounceFn);
   }, [query]);
+
+  // Immediate search on Enter key
+  const handleEnterSearch = async () => {
+    const trimmed = query.trim();
+    if (trimmed.length < 2) return;
+
+    // If results already exist, pick the first one
+    if (results.length > 0) {
+      fetchLyrics(results[0]);
+      return;
+    }
+
+    // Otherwise do an immediate search
+    try {
+      setIsSearching(true);
+      const res = await Axios.get(`https://saavnapi-nine.vercel.app/result/?query=${encodeURIComponent(trimmed)}`);
+      if (Array.isArray(res.data) && res.data.length > 0) {
+        setResults(res.data.slice(0, 5));
+        fetchLyrics(res.data[0]);
+      }
+    } catch (err) {
+      console.error("Search error:", err);
+    } finally {
+      setIsSearching(false);
+    }
+  };
 
   // LRC Parser
   const parseLrc = (lrcString) => {
@@ -534,6 +566,12 @@ export default function Lyrics() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onFocus={() => query.length > 2 && results.length > 0 && setShowDropdown(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleEnterSearch();
+                  }
+                }}
               />
               {isSearching && <Loader2 size={18} className="text-white/80 ml-4 animate-spin" />}
             </div>
@@ -555,6 +593,12 @@ export default function Lyrics() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onFocus={() => query.length > 2 && results.length > 0 && setShowDropdown(true)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleEnterSearch();
+                    }
+                  }}
                 />
                 {isSearching && <Loader2 size={18} className="text-white/80 ml-4 animate-spin" />}
               </div>
@@ -667,7 +711,7 @@ export default function Lyrics() {
             <div className="w-full max-w-[1400px] flex flex-col md:flex-row items-center md:items-stretch justify-start md:justify-between gap-8 md:gap-12 lg:gap-24 pointer-events-auto h-auto md:h-full md:max-h-[85vh]">
               
                 {/* LEFT COLUMN: PLAYER */}
-              <div className="w-full md:w-1/2 max-w-[500px] flex flex-col justify-center gap-6 md:gap-8 h-auto md:h-full py-4 md:py-8 shrink min-h-0">
+              <div className="w-full md:w-1/2 max-w-[500px] flex flex-col items-center md:items-stretch justify-center gap-6 md:gap-8 h-auto md:h-full py-4 md:py-8 shrink min-h-0">
                 
                 {/* Massive Album Art */}
                 <motion.div 
@@ -686,7 +730,7 @@ export default function Lyrics() {
                 {/* Title & Controls */}
                 <div className="flex flex-col gap-6 md:gap-8 w-full">
                   
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 text-center md:text-left">
                     <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white line-clamp-1" dangerouslySetInnerHTML={{ __html: selectedSong.title || selectedSong.song }}></h2>
                     <span className="text-base sm:text-xl md:text-2xl text-white/60 font-medium line-clamp-1" dangerouslySetInnerHTML={{ __html: selectedSong.singers }}></span>
                   </div>
@@ -711,10 +755,10 @@ export default function Lyrics() {
                     />
 
                     {/* Play Button + Action Buttons in one row */}
-                    <div className="flex items-center justify-center gap-4 md:gap-6 w-full max-w-[400px] mx-auto py-2">
+                    <div className="flex items-center justify-center gap-3 md:gap-6 w-full max-w-[400px] mx-auto py-2">
 
                       {/* Left Group */}
-                      <div className="flex items-center justify-end gap-3 md:gap-4 w-[110px] md:w-[130px]">
+                      <div className="flex-1 flex items-center justify-end gap-3">
                         {/* Copy Lyrics */}
                         {(plainLyrics || syncedLyrics.length > 0) && (
                           <motion.button
@@ -734,9 +778,9 @@ export default function Lyrics() {
                               }
                             }}
                             onMouseMove={handleGlow}
-                            className="cursor-glow cursor-glow-sm w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/15 text-white/80 flex items-center justify-center transition-all hover:bg-white/20 hover:border-white/25 hover:text-white cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.15)] shrink-0"
+                            className="cursor-glow cursor-glow-sm w-11 h-11 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/15 text-white/80 flex items-center justify-center transition-all hover:bg-white/20 hover:border-white/25 hover:text-white cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.15)] shrink-0"
                           >
-                            {copied ? <Check size={20} className="text-emerald-400" /> : <Copy size={20} />}
+                            {copied ? <Check size={18} className="text-emerald-400" /> : <Copy size={18} />}
                           </motion.button>
                         )}
 
@@ -746,13 +790,28 @@ export default function Lyrics() {
                             whileHover={{ scale: 1.15 }}
                             whileTap={{ scale: 0.9 }}
                             title="Download MP3"
-                            onClick={() => {
-                              window.open(selectedSong.media_url, '_blank');
+                            onClick={async () => {
+                              try {
+                                const songName = `${decodeHtml(getSongTitle(selectedSong))} - ${decodeHtml(getPrimaryArtist(selectedSong))}`;
+                                const response = await fetch(selectedSong.media_url);
+                                const blob = await response.blob();
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `${songName}.mp3`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                              } catch (err) {
+                                console.error('Download failed:', err);
+                                window.open(selectedSong.media_url, '_blank');
+                              }
                             }}
                             onMouseMove={handleGlow}
-                            className="cursor-glow cursor-glow-sm w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/15 text-white/80 flex items-center justify-center transition-all hover:bg-white/20 hover:border-white/25 hover:text-white cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.15)] shrink-0"
+                            className="cursor-glow cursor-glow-sm w-11 h-11 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/15 text-white/80 flex items-center justify-center transition-all hover:bg-white/20 hover:border-white/25 hover:text-white cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.15)] shrink-0"
                           >
-                            <Download size={20} />
+                            <Download size={18} />
                           </motion.button>
                         )}
                       </div>
@@ -762,14 +821,14 @@ export default function Lyrics() {
                         <button 
                           onClick={togglePlay} 
                           onMouseMove={handleGlow}
-                          className="cursor-glow cursor-glow-sm w-20 h-20 md:w-24 md:h-24 rounded-full bg-white text-black flex items-center justify-center transition-transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.4),0_0_60px_rgba(255,255,255,0.2)]"
+                          className="cursor-glow cursor-glow-sm w-18 h-18 md:w-24 md:h-24 rounded-full bg-white text-black flex items-center justify-center transition-transform hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.4),0_0_60px_rgba(255,255,255,0.2)]"
                         >
-                          {isPlaying ? <Pause size={40} className="fill-black" /> : <Play size={40} className="fill-black ml-2" />}
+                          {isPlaying ? <Pause size={36} className="fill-black" /> : <Play size={36} className="fill-black ml-1.5" />}
                         </button>
                       </div>
 
                       {/* Right Group */}
-                      <div className="flex items-center justify-start gap-3 md:gap-4 w-[110px] md:w-[130px]">
+                      <div className="flex-1 flex items-center justify-start gap-3">
                         {/* Download Lyrics as TXT */}
                         {(plainLyrics || syncedLyrics.length > 0) && (
                           <motion.button
@@ -792,9 +851,9 @@ export default function Lyrics() {
                               URL.revokeObjectURL(url);
                             }}
                             onMouseMove={handleGlow}
-                            className="cursor-glow cursor-glow-sm w-12 h-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/15 text-white/80 flex items-center justify-center transition-all hover:bg-white/20 hover:border-white/25 hover:text-white cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.15)] shrink-0"
+                            className="cursor-glow cursor-glow-sm w-11 h-11 md:w-12 md:h-12 rounded-full bg-white/10 backdrop-blur-xl border border-white/15 text-white/80 flex items-center justify-center transition-all hover:bg-white/20 hover:border-white/25 hover:text-white cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.15)] shrink-0"
                           >
-                            <FileText size={20} />
+                            <FileText size={18} />
                           </motion.button>
                         )}
                       </div>

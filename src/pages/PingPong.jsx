@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import appLogo from '../assets/Logo.png';
+
 import './PingPong.css';
 
 const DEFAULT_BOUNDS = { width: 600, height: 400 };
@@ -551,7 +551,6 @@ const PingPong = () => {
 
       <div className="relative z-10 w-full max-w-[1831px] px-4 md:px-8 flex flex-col items-center mt-24 pb-12">
         <div className="relative mb-20 flex flex-col items-center">
-          <img src={appLogo} alt="App logo" className="ping-pong-logo" />
           <h1 className="font-grotesk text-6xl md:text-8xl lg:text-[100px] uppercase leading-none tracking-wide text-white text-center drop-shadow-2xl">
             PING PONG
           </h1>

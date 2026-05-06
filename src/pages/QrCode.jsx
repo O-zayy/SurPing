@@ -5,7 +5,6 @@ export default function QrCode() {
   const [temp, setTemp] = useState("");
   const [word, setWord] = useState("");
   const [size, setSize] = useState(400);
-  const [bgColor, setBgColor] = useState("ffffff");
   const [qrCode, setQrCode] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -16,7 +15,7 @@ export default function QrCode() {
       setIsGenerating(true);
     }, 0);
     const generateTimer = window.setTimeout(() => {
-      setQrCode(`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(word)}&size=${size}x${size}&bgcolor=${bgColor}`);
+      setQrCode(`https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(word)}&size=${size}x${size}&bgcolor=ffffff`);
       setIsGenerating(false);
     }, 1500);
 
@@ -24,7 +23,7 @@ export default function QrCode() {
       window.clearTimeout(startTimer);
       window.clearTimeout(generateTimer);
     };
-  }, [word, size, bgColor]);
+  }, [word, size]);
 
   function handleClick() {
     if (temp) {
@@ -115,35 +114,14 @@ export default function QrCode() {
                 />
               </motion.div>
 
-              <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
-                <div className="flex flex-col gap-2 flex-1">
-                  <label className="text-gray-300 text-xs font-semibold uppercase tracking-widest">Size (px)</label>
-                  <input
-                    type="number"
-                    value={size}
-                    onChange={(e) => setSize(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white font-body font-light focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/40 transition-all"
-                  />
-                </div>
-                <div className="flex flex-col gap-2 flex-1">
-                  <label className="text-gray-300 text-xs font-semibold uppercase tracking-widest">Bg Color</label>
-                  <div className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-lg px-4 py-3 focus-within:border-white/40 focus-within:ring-1 focus-within:ring-white/40 transition-all">
-                    <span className="text-gray-400 font-light">#</span>
-                    <input
-                      type="text"
-                      value={bgColor}
-                      maxLength={6}
-                      onChange={(e) => setBgColor(e.target.value.replace(/[^0-9A-Fa-f]/g, ''))}
-                      className="w-full bg-transparent text-white font-body font-light focus:outline-none uppercase"
-                    />
-                    {/* Live Color Preview */}
-                    <motion.div 
-                      className="w-4 h-4 rounded-full border border-white/20 shadow-inner flex-shrink-0 transition-colors duration-300"
-                      style={{ backgroundColor: `#${bgColor.padEnd(6, '0')}` }}
-                      layoutId="colorPreview"
-                    />
-                  </div>
-                </div>
+              <motion.div variants={itemVariants} className="flex flex-col gap-2">
+                <label className="text-gray-300 text-xs font-semibold uppercase tracking-widest">Size (px)</label>
+                <input
+                  type="number"
+                  value={size}
+                  onChange={(e) => setSize(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white font-body font-light focus:outline-none focus:border-white/40 focus:ring-1 focus:ring-white/40 transition-all"
+                />
               </motion.div>
 
               {/* Shimmer CTA Button */}

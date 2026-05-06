@@ -114,8 +114,9 @@ const Folder = ({ color = '#5227FF', size = 1, items = [], className = '' }) => 
                 key={i}
                 onMouseMove={e => handlePaperMouseMove(e, i)}
                 onMouseLeave={e => handlePaperMouseLeave(e, i)}
+                onClick={e => { if (open) e.stopPropagation(); }}
                 className={`absolute z-20 bottom-[10%] left-1/2 transition-all duration-300 ease-in-out ${
-                  !open ? 'transform -translate-x-1/2 translate-y-[10%] group-hover:translate-y-0' : 'hover:scale-110'
+                  !open ? 'transform -translate-x-1/2 translate-y-[10%] group-hover:translate-y-0 pointer-events-none' : 'hover:scale-110 pointer-events-auto'
                 } ${sizeClasses}`}
                 style={{
                   ...(!open ? {} : { transform: transformStyle }),

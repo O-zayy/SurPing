@@ -422,8 +422,12 @@ export default function LandingPage() {
               size={2}
               color="#4C8AF6"
               className="folder-item"
-              items={teamMembers.slice(0, 3).map(member => (
-                <div key={`${member.handle}-paper`} className="folder-paper-content">
+              items={[teamMembers[1], teamMembers[2], teamMembers[0]].map(member => (
+                <div 
+                  key={`${member.handle}-paper`} 
+                  className="folder-paper-content cursor-pointer"
+                  onClick={() => window.open(member.linkedin, '_blank')}
+                >
                   <img src={member.avatarUrl} alt={member.name} className="folder-paper-avatar" loading="lazy" />
                   <span className="folder-paper-name">{member.handle}</span>
                 </div>
