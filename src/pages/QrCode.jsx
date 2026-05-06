@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// QR Code Generator Page
+// User enters a URL, picks a size, and clicks "Generate" to create a QR code image
+// Uses the free qrserver.com API to build the QR image
 export default function QrCode() {
   const [temp, setTemp] = useState("");
   const [word, setWord] = useState("");

@@ -10,140 +10,10 @@ import adityaImg from '/src/assets/ADITYA SRIVASTAVA.png';
 import shubhamImg from '/src/assets/SHUBHAM MAKKAR.png';
 import './LandingPage.css';
 
-const FadingVideo = ({ src, className, style }) => {
-  const videoRef = useRef(null);
-  const fadingOutRef = useRef(false);
-  const fadeRAF = useRef(null);
-
-  const fadeTo = (targetOpacity) => {
-    if (!videoRef.current) return;
-    const duration = 500;
-    const start = performance.now();
-    const initialOpacity = parseFloat(videoRef.current.style.opacity) || 0;
-
-    const animateFade = (time) => {
-      let timeFraction = (time - start) / duration;
-      if (timeFraction > 1) timeFraction = 1;
-
-      const currentOpacity = initialOpacity + (targetOpacity - initialOpacity) * timeFraction;
-      if (videoRef.current) {
-        videoRef.current.style.opacity = currentOpacity;
-      }
-
-      if (timeFraction < 1) {
-        fadeRAF.current = requestAnimationFrame(animateFade);
-      }
-    };
-
-    if (fadeRAF.current) cancelAnimationFrame(fadeRAF.current);
-    fadeRAF.current = requestAnimationFrame(animateFade);
-  };
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleLoadedData = () => {
-      video.style.opacity = 0;
-      video.play().catch(e => console.log(e));
-      fadeTo(1);
-    };
-
-    const handleTimeUpdate = () => {
-      if (!video.duration) return;
-      const timeLeft = video.duration - video.currentTime;
-      if (!fadingOutRef.current && timeLeft <= 0.55 && timeLeft > 0) {
-        fadingOutRef.current = true;
-        fadeTo(0);
-      }
-    };
-
-    const handleEnded = () => {
-      video.style.opacity = 0;
-      setTimeout(() => {
-        if (video) {
-          video.currentTime = 0;
-          video.play().catch(e => console.log(e));
-          fadingOutRef.current = false;
-          fadeTo(1);
-        }
-      }, 100);
-    };
-
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('timeupdate', handleTimeUpdate);
-    video.addEventListener('ended', handleEnded);
-
-    // Initial trigger just in case
-    if (video.readyState >= 3) {
-      handleLoadedData();
-    }
-
-    return () => {
-      if (fadeRAF.current) cancelAnimationFrame(fadeRAF.current);
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('timeupdate', handleTimeUpdate);
-      video.removeEventListener('ended', handleEnded);
-    };
-  }, []);
-
-  return (
-    <video
-      ref={videoRef}
-      src={src}
-      className={className}
-      style={{ ...style, opacity: 0 }}
-      autoPlay
-      muted
-      playsInline
-      preload="auto"
-    />
-  );
-};
-
-const BlurText = ({ text, className }) => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.1 });
-  const words = text.split(" ");
-
-  return (
-    <p ref={ref} className={className} style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', rowGap: '0.1em' }}>
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          initial={{ filter: 'blur(10px)', opacity: 0, y: 50 }}
-          animate={isInView ? {
-            filter: ['blur(10px)', 'blur(5px)', 'blur(0px)'],
-            opacity: [0, 0.5, 1],
-            y: [50, -5, 0]
-          } : {}}
-          transition={{ duration: 0.7, times: [0, 0.5, 1], ease: 'easeOut', delay: (i * 100) / 1000 }}
-          style={{ display: 'inline-block', marginRight: '0.28em' }}
-        >
-          {word}
-        </motion.span>
-      ))}
-    </p>
-  );
-};
-
 export default function LandingPage() {
-  // Suppress specific framer motion benign errors
-  useEffect(() => {
-    const originalError = console.error;
-    console.error = (...args) => {
-      if (args[0] && typeof args[0] === 'string' && args[0].includes('Warning: Each child in a list should have a unique "key" prop.')) {
-        return; // Suppress list key warnings
-      }
-      originalError.call(console, ...args);
-    };
-    return () => {
-      console.error = originalError;
-    };
-  }, []);
-
   const cardsRef = useRef(null);
 
+  // Team members data with their LinkedIn profiles and theme colors
   const teamMembers = [
     {
       name: 'Ojaswa Chauahan',
@@ -180,31 +50,34 @@ export default function LandingPage() {
     }
   ];
 
+  // Fade in profile cards with a stagger effect on page load
   useEffect(() => {
     gsap.fromTo(
       '.profile-card',
       { opacity: 0 },
-      {
-        opacity: 1,
-        stagger: 0.08,
-        ease: 'elastic.out(1, 0.5)',
-        delay: 1
-      }
+      { opacity: 1, stagger: 0.08, ease: 'elastic.out(1, 0.5)', delay: 1 }
     );
   }, []);
 
   return (
     <div className="home-page bg-black text-white min-h-screen font-body overflow-x-hidden">
-      {/* Hero Section */}
+
+      {/* ==================== HERO SECTION ==================== */}
       <section className="home-hero relative w-full min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        <FadingVideo
+
+        {/* Background Video */}
+        <video
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4"
           className="absolute left-1/2 top-0 -translate-x-1/2 object-cover object-top z-0"
           style={{ width: "120%", height: "120%" }}
+          autoPlay muted loop playsInline
         />
         <div className="home-hero-shade" />
 
+        {/* Hero Content */}
         <div className="home-hero-content relative z-10 flex-1 flex flex-col items-center justify-center pt-28 px-4 w-full">
+
+          {/* SurPing Badge */}
           <motion.div
             initial={{ filter: 'blur(10px)', opacity: 0, y: 20 }}
             animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
@@ -215,11 +88,17 @@ export default function LandingPage() {
             <span className="text-sm text-white/90">Play, listen, trace, and create from one sleek space</span>
           </motion.div>
 
-          <BlurText
-            text="A sharper way to explore your web tools"
-            className="home-title text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-heading italic text-white leading-[0.86] max-w-4xl justify-center text-center"
-          />
+          {/* Main Title */}
+          <motion.h1
+            initial={{ filter: 'blur(10px)', opacity: 0, y: 50 }}
+            animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+            className="home-title text-5xl sm:text-6xl md:text-7xl lg:text-[5.5rem] font-heading italic text-white leading-[0.86] max-w-4xl text-center"
+          >
+            A sharper way to explore your web tools
+          </motion.h1>
 
+          {/* Subtitle */}
           <motion.p
             initial={{ filter: 'blur(10px)', opacity: 0, y: 20 }}
             animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
@@ -229,6 +108,7 @@ export default function LandingPage() {
             SurPing brings immersive lyrics, fast QR creation, signal lookup, and a polished ping pong arena into a premium glass interface built to feel smooth on every screen.
           </motion.p>
 
+          {/* CTA Buttons */}
           <motion.div
             initial={{ filter: 'blur(10px)', opacity: 0, y: 20 }}
             animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
@@ -249,6 +129,7 @@ export default function LandingPage() {
             </Link>
           </motion.div>
 
+          {/* Stats Row */}
           <motion.div
             initial={{ filter: 'blur(10px)', opacity: 0, y: 20 }}
             animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
@@ -276,6 +157,7 @@ export default function LandingPage() {
           </motion.div>
         </div>
 
+        {/* Bottom Tool Strip */}
         <motion.div
           initial={{ filter: 'blur(10px)', opacity: 0, y: 20 }}
           animate={{ filter: 'blur(0px)', opacity: 1, y: 0 }}
@@ -299,11 +181,14 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
-      {/* Capabilities Section */}
+      {/* ==================== FEATURES SECTION ==================== */}
       <section className="relative w-full min-h-screen flex flex-col">
-        <FadingVideo
+
+        {/* Background Video */}
+        <video
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4"
           className="absolute inset-0 w-full h-full object-cover z-0"
+          autoPlay muted loop playsInline
         />
 
         <div className="home-feature-wrap relative z-10 px-5 sm:px-8 md:px-16 lg:px-20 pt-24 pb-10 flex flex-col min-h-screen flex-1">
@@ -314,8 +199,10 @@ export default function LandingPage() {
             </h2>
           </div>
 
+          {/* Feature Cards */}
           <div className="home-feature-grid grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 pb-8">
-            {/* Card 1 */}
+
+            {/* Lyrics Card */}
             <div className="home-feature-card liquid-glass rounded-[1.25rem] p-6 min-h-[360px] flex flex-col">
               <div className="flex items-start justify-between gap-4">
                 <div className="w-11 h-11 liquid-glass rounded-[0.75rem] flex items-center justify-center">
@@ -339,7 +226,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Card 2 */}
+            {/* Ping Pong Card */}
             <div className="home-feature-card liquid-glass rounded-[1.25rem] p-6 min-h-[360px] flex flex-col">
               <div className="flex items-start justify-between gap-4">
                 <div className="w-11 h-11 liquid-glass rounded-[0.75rem] flex items-center justify-center">
@@ -361,7 +248,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Card 3 */}
+            {/* Utility Card */}
             <div className="home-feature-card liquid-glass rounded-[1.25rem] p-6 min-h-[360px] flex flex-col">
               <div className="flex items-start justify-between gap-4">
                 <div className="w-11 h-11 liquid-glass rounded-[0.75rem] flex items-center justify-center">
@@ -388,12 +275,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Team Section */}
+      {/* ==================== TEAM SECTION ==================== */}
       <section className="crew-section relative w-full min-h-screen flex flex-col items-center justify-center px-5 sm:px-8 md:px-16 lg:px-20 py-24">
         <div className="text-sm text-white/60 mb-6 font-medium tracking-wide uppercase">// Our Team</div>
         <h2 className="crew-title font-heading italic text-white text-5xl sm:text-6xl md:text-7xl lg:text-[6rem] leading-[0.9] mb-16">
           Meet the Crew
         </h2>
+
+        {/* Desktop View: Full Profile Cards (visible on large screens) */}
         <div ref={cardsRef} className="crew-grid hidden lg:grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-[112rem]">
           {teamMembers.map(member => (
             <ProfileCard
@@ -416,6 +305,7 @@ export default function LandingPage() {
           ))}
         </div>
 
+        {/* Tablet View: Folder with team photos (visible on medium screens) */}
         <div className="crew-folder-grid hidden sm:flex lg:hidden flex-col items-center gap-8 w-full max-w-4xl">
           <div className="folder-single-wrap">
             <Folder
@@ -436,6 +326,7 @@ export default function LandingPage() {
           </div>
         </div>
 
+        {/* Mobile View: Swipeable Card Stack (visible on small screens) */}
         <div className="crew-stack-wrap sm:hidden w-full max-w-[19rem] h-[22rem] mt-2">
           <Stack
             randomRotation
@@ -463,7 +354,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* About Me Section / Footer */}
+      {/* ==================== FOOTER / ABOUT SECTION ==================== */}
       <section className="about-section relative w-full flex flex-col items-center justify-center px-5 sm:px-8 py-24 border-t border-white/5 bg-black/40 backdrop-blur-md">
         <div className="max-w-4xl text-center flex flex-col items-center relative z-10">
           <h2 className="font-heading italic text-white text-3xl sm:text-4xl md:text-5xl mb-4 text-shadow-sm">
@@ -474,7 +365,9 @@ export default function LandingPage() {
             I build premium web experiences focused on smooth animations, cinematic design, and high-performance interfaces. Check out my other work below.
           </p>
 
+          {/* Social Links */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-5 items-center justify-center">
+            {/* GitHub */}
             <a 
               href="https://github.com/O-zayy" 
               target="_blank" 
@@ -491,6 +384,7 @@ export default function LandingPage() {
               </div>
             </a>
 
+            {/* Instagram */}
             <a 
               href="https://www.instagram.com/ojaswa_chauhan770?igsh=b3Qyd2s0cWdnbzI5" 
               target="_blank" 

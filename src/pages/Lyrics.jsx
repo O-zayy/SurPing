@@ -8,6 +8,11 @@ import VariableProximity from '../components/VariableProximity';
 import ElasticSlider from '../components/ElasticSlider';
 import './Lyrics.css';
 
+// Lyrics Finder Page
+// Search for any song using the JioSaavn API, play its audio, and view synced or plain lyrics
+// Synced lyrics (from LrcLib) scroll automatically in time with the music — like karaoke
+// Users can also copy lyrics, download the MP3, or save lyrics as a .txt file
+
 const decodeHtml = (value = "") => {
   if (!value) return "";
   if (typeof document === "undefined") {

@@ -3,6 +3,11 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 import './PingPong.css';
 
+// Ping Pong Game Page
+// A two-player pong game with keyboard controls (W/S for left, Arrow keys for right)
+// and on-screen touch buttons for mobile. First to 5 points wins.
+// High scores are saved in localStorage so they persist between sessions.
+
 const DEFAULT_BOUNDS = { width: 600, height: 400 };
 const PADDLE_WIDTH = 18;
 const PADDLE_HEIGHT = 96;

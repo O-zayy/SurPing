@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Axios from 'axios';
 
+// This page lets users enter an IP address and see its location info (city, country, coordinates, provider)
+// If no IP is entered, it detects and shows info about the user's own IP address
 export default function IpLocator() {
     const [ip, setIp] = useState('');
     const [data, setData] = useState(null);

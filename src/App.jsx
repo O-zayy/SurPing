@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import BubbleMenu from './components/BubbleMenu';
 import LandingPage from './pages/LandingPage';
 import QrCode from './pages/QrCode';
@@ -8,67 +8,20 @@ import Lyrics from './pages/Lyrics';
 import IpLocator from './pages/IpLocator';
 import appLogo from './assets/Logo.png';
 
+// Menu items for navigation
 const menuItems = [
-  {
-    label: 'Home',
-    href: '/',
-    rotation: -6,
-    hoverStyles: { bgColor: '#6fff00', textColor: '#010828' },
-  },
-  {
-    label: 'QR Code',
-    href: '/qr-code',
-    rotation: 4,
-    hoverStyles: { bgColor: '#eff4ff', textColor: '#010828' },
-  },
-  {
-    label: 'Ping Pong',
-    href: '/ping-pong',
-    rotation: -3,
-    hoverStyles: { bgColor: '#ff9f1c', textColor: '#010828' },
-  },
-  {
-    label: 'Lyrics',
-    href: '/lyrics',
-    rotation: 5,
-    hoverStyles: { bgColor: '#bde0fe', textColor: '#010828' },
-  },
-  {
-    label: 'IP Locator',
-    href: '/ip-locator',
-    rotation: -4,
-    hoverStyles: { bgColor: '#ff4d6d', textColor: '#ffffff' },
-  },
+  { label: 'Home', href: '/', rotation: -6, hoverStyles: { bgColor: '#6fff00', textColor: '#010828' } },
+  { label: 'QR Code', href: '/qr-code', rotation: 4, hoverStyles: { bgColor: '#eff4ff', textColor: '#010828' } },
+  { label: 'Ping Pong', href: '/ping-pong', rotation: -3, hoverStyles: { bgColor: '#ff9f1c', textColor: '#010828' } },
+  { label: 'Lyrics', href: '/lyrics', rotation: 5, hoverStyles: { bgColor: '#bde0fe', textColor: '#010828' } },
+  { label: 'IP Locator', href: '/ip-locator', rotation: -4, hoverStyles: { bgColor: '#ff4d6d', textColor: '#ffffff' } },
 ];
 
+// Words that cycle through in the page transition loader
 const transitionWords = ['Hello', 'Bonjour', 'Namaste', 'Ciao', 'Hola', 'SurPing'];
 
-const handleGlow = (e) => {
-  const rect = e.currentTarget.getBoundingClientRect();
-  e.currentTarget.style.setProperty('--glow-x', `${e.clientX - rect.left}px`);
-  e.currentTarget.style.setProperty('--glow-y', `${e.clientY - rect.top}px`);
-};
-
-function DesktopNavbar({ logo, items, onNavigateStart }) {
-  const navigate = useNavigate();
-
-  const handleNavigation = (e, href) => {
-    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) {
-      return;
-    }
-
-    e.preventDefault();
-    const animationDelay = onNavigateStart?.(href) ?? 900;
-
-    window.setTimeout(() => {
-      navigate(href);
-    }, animationDelay);
-  };
-
-  return null;
-}
-
-const getTargetWord = (href) => {
+// Figures out what final word to show when navigating to each page
+function getTargetWord(href) {
   switch (href) {
     case '/': return 'SurPing';
     case '/qr-code': return 'QR Code';
@@ -77,64 +30,57 @@ const getTargetWord = (href) => {
     case '/ip-locator': return 'IP Locator';
     default: return 'SurPing';
   }
-};
+}
 
 function App() {
-  const [showSiteLoader, setShowSiteLoader] = useState(false);
-  const [targetLoaderWord, setTargetLoaderWord] = useState('SurPing');
-  const [loaderWordIndex, setLoaderWordIndex] = useState(transitionWords.length - 1);
-  const loaderTimeoutRef = useRef(null);
-  const loaderIntervalRef = useRef(null);
+  const [showLoader, setShowLoader] = useState(false);
+  const [targetWord, setTargetWord] = useState('SurPing');
+  const [wordIndex, setWordIndex] = useState(transitionWords.length - 1);
+  const loaderTimeout = useRef(null);
+  const loaderInterval = useRef(null);
 
+  // Set page title on load
   useEffect(() => {
     document.title = 'SurPing';
-
     return () => {
-      if (loaderTimeoutRef.current) {
-        window.clearTimeout(loaderTimeoutRef.current);
-      }
-      if (loaderIntervalRef.current) {
-        window.clearInterval(loaderIntervalRef.current);
-      }
+      if (loaderTimeout.current) clearTimeout(loaderTimeout.current);
+      if (loaderInterval.current) clearInterval(loaderInterval.current);
     };
   }, []);
 
-  const startPageTransition = (href = '/') => {
-    if (loaderTimeoutRef.current) {
-      window.clearTimeout(loaderTimeoutRef.current);
-    }
-    if (loaderIntervalRef.current) {
-      window.clearInterval(loaderIntervalRef.current);
-    }
+  // Show a quick animated loader when navigating between pages
+  function startPageTransition(href = '/') {
+    if (loaderTimeout.current) clearTimeout(loaderTimeout.current);
+    if (loaderInterval.current) clearInterval(loaderInterval.current);
 
-    setTargetLoaderWord(getTargetWord(href));
-    setLoaderWordIndex(0);
-    setShowSiteLoader(true);
+    setTargetWord(getTargetWord(href));
+    setWordIndex(0);
+    setShowLoader(true);
 
     let nextIndex = 0;
-    loaderIntervalRef.current = window.setInterval(() => {
+    loaderInterval.current = setInterval(() => {
       nextIndex += 1;
-      setLoaderWordIndex(Math.min(nextIndex, transitionWords.length));
-
-      if (nextIndex >= transitionWords.length && loaderIntervalRef.current) {
-        window.clearInterval(loaderIntervalRef.current);
-        loaderIntervalRef.current = null;
+      setWordIndex(Math.min(nextIndex, transitionWords.length));
+      if (nextIndex >= transitionWords.length) {
+        clearInterval(loaderInterval.current);
       }
-    }, 160); // Slowed down from 135
+    }, 160);
 
-    loaderTimeoutRef.current = window.setTimeout(() => {
-      setShowSiteLoader(false);
-    }, 1600); // Increased from 1280 to show QR Code / SurPing for longer
+    loaderTimeout.current = setTimeout(() => {
+      setShowLoader(false);
+    }, 1600);
 
     return 920;
-  };
+  }
 
-  const currentWords = [...transitionWords];
-  currentWords[currentWords.length - 1] = targetLoaderWord;
+  // Build the word list, replacing the last word with the target page name
+  const displayWords = [...transitionWords];
+  displayWords[displayWords.length - 1] = targetWord;
+  const currentWord = displayWords[Math.min(wordIndex, displayWords.length - 1)];
 
   return (
     <Router>
-      <DesktopNavbar logo={appLogo} items={menuItems} onNavigateStart={startPageTransition} />
+      {/* Navigation Menu */}
       <BubbleMenu
         className="mobile-bubble-menu"
         logo={appLogo}
@@ -142,14 +88,16 @@ function App() {
         onLogoClick={() => startPageTransition('/')}
         onNavigateStart={startPageTransition}
       />
-      <div className={`site-loader ${showSiteLoader ? 'visible' : ''}`} aria-hidden={!showSiteLoader}>
+
+      {/* Page Transition Loader */}
+      <div className={`site-loader ${showLoader ? 'visible' : ''}`}>
         <div className="site-loader-card">
-          <span key={currentWords[Math.min(loaderWordIndex, currentWords.length - 1)]} className="site-loader-title">
-            {currentWords[Math.min(loaderWordIndex, currentWords.length - 1)]}
-          </span>
+          <span key={currentWord} className="site-loader-title">{currentWord}</span>
           <span className="site-loader-line" />
         </div>
       </div>
+
+      {/* All Pages */}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/qr-code" element={<QrCode />} />
